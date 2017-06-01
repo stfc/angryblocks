@@ -33,6 +33,7 @@ class AngryBlocksGame(object):
         self.canvas = None
         self.textBuffer = None
         self.text_draw_time = 0
+        self.multiplier = 1
 
         # Initialise pygame
         pygame.init()
@@ -127,7 +128,7 @@ class AngryBlocksGame(object):
         self.text_draw_time = int(time.time())
 
     def drawscore(self):
-        txt = self.scorefont.render("Score: "+str(self.score), True, WHITE)
+        txt = self.scorefont.render("Score: %d  Multiplier: %d" % (self.score, self.multiplier), True, WHITE)
         r = txt.get_rect()
         r.topleft = 0, 0
         self.canvas.blit(txt, r)
@@ -152,6 +153,7 @@ class AngryBlocksGame(object):
     def miss(self):
         self.sounds.miss.play()
         self.misses += 1
+        self.multiplier = 1
         self.drawtext("Miss " + str(self.misses) + " of " + str(self.MISS_LIMIT))
         if self.misses >= self.MISS_LIMIT:
             self.sounds.lose.play()
@@ -198,6 +200,7 @@ class AngryBlocksGame(object):
                         self.sounds.bounce.play()
                         self.vy = -self.vy * 0.75
                         self.vx = self.vx * 0.75
+                        self.multiplier += 1
 
                     # Update the velocities from the accelerations
                     self.vx += self.ax
@@ -294,7 +297,7 @@ class AngryBlocksGame(object):
                 # If the projectile hits the target
                 if self.projectile.colliderect(self.target):
                     self.sounds.hit.play()
-                    self.score += 1
+                    self.score += (1 * self.multiplier)
                     self.drawtext(self.textHit)
                     self.reset()
                     self.reset_target()
