@@ -169,13 +169,14 @@ class AngryBlocksGame(object):
     def miss(self):
         self.sounds.miss.play()
         self.misses += 1
-        self.multiplier = 1
+        self.multiplier = max(1, self.multiplier - 1)
         self.drawtext("Miss " + str(self.misses) + " of " + str(self.MISS_LIMIT))
         if self.misses >= self.MISS_LIMIT:
             self.sounds.lose.play()
             self.reset_target()
             self.misses = 0
-            self.score -= 1
+            self.score -= self.multiplier
+            self.multiplier = 1
         self.reset()
 
     def run(self):
@@ -216,7 +217,6 @@ class AngryBlocksGame(object):
                         self.sounds.bounce.play()
                         self.vy = -self.vy * 0.75
                         self.vx = self.vx * 0.75
-                        self.multiplier += 1
 
                     # Update the velocities from the accelerations
                     self.vx += self.ax
@@ -313,7 +313,8 @@ class AngryBlocksGame(object):
                 # If the projectile hits the target
                 if self.projectile.colliderect(self.target):
                     self.sounds.hit.play()
-                    self.score += (1 * self.multiplier)
+                    self.score += self.multiplier
+                    self.multiplier += 1
                     self.drawtext(self.textHit)
                     self.reset()
                     self.reset_target()
