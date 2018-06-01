@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 #
 # Copyright 2017 Science & Technology Facilities Council
@@ -16,7 +16,16 @@
 #     limitations under the License.
 #
 
-import pygame, time, math, ConfigParser
+import pygame, time, math
+
+try:
+    # Import Python 3 configparser module
+    import configparser
+except ImportError:
+    # Import Python 2 version of the module, but alias it to match the
+    # Python 3 version for simplicities sake later on when using the module.
+    import ConfigParser as configparser
+
 from random import randint
 from pygame.locals import *
 from collections import namedtuple
@@ -324,7 +333,7 @@ class AngryBlocksGame(object):
 
 
 def main():
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.readfp(open('defaults.cfg'))
     config.read(['game.cfg'])
 
